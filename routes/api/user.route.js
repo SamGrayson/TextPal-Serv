@@ -9,6 +9,8 @@ var UserController = require('../../controllers/user.controller')
 // Map for each route
 
 router.post('/create', UserController.create)
+router.post('/authenticate', UserController.authenticate)
+router.get('/profile', UserController.profile)
 
 // Export the router
 

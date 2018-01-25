@@ -23,6 +23,25 @@ var UserSchema = new mongoose.Schema({
     }
 })
 
+/** Authentication, read hash password */
+UserSchema.statics.authenticate = function(phone, password, callback) {
+    User.findOne({phone:phone})
+        .exec(function (err, user) {
+            if (err) {
+                throw Error("Error executing findOne by phone")
+            } else if (!user) {
+                throw Error("User not found by phone")
+            }
+            bcrypt.compare(password, user.password, function(err, result) {
+                if (result === true) {
+                    return callback(null, user)
+                } else {
+                    return callback()
+                }
+            })
+        })
+}
+
 /** Hash password before putting into DB */
 UserSchema.pre('save', function(next){
     var user = this

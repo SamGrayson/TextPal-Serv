@@ -4,7 +4,8 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 var bluebird = require('bluebird');
 
 
@@ -20,6 +21,17 @@ mongoose.connect('mongodb://127.0.0.1:27017/textpal')
 Mongodb Database  at URL : mongodb://127.0.0.1:27017/textpal`)})
 .catch(()=> { console.log(`Error Connecting to the Mongodb 
 Database at URL : mongodb://127.0.0.1:27017/textpal`)});
+var db = mongoose.connection;
+
+// use session for tracking logins
+app.use(session({
+  secret: 'supersecret17!',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db
+  })
+}))
 
 // parse incoming requests
 app.use(bodyParser.json());
