@@ -12,11 +12,13 @@ exports.create = async function(req, res, next) {
     }
 
     if (req.body.phone &&
+        req.body.name &&
         req.body.password &&
         req.body.passwordConf) {
 
         var userData = {
             phone: req.body.phone,
+            name: req.body.name,
             password: req.body.password,
             passwordConf: req.body.passwordConf
         }
