@@ -1,7 +1,6 @@
 var mongoose = require('mongoose')
 var mongoosePaginate = require('mongoose-paginate')
 
-
 var MessageSchema = new mongoose.Schema({
     type: String,
     message: String,

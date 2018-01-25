@@ -6,7 +6,7 @@ var MessageService = require('../services/message.service')
 
 _this = this
 
-exports.getMessages = async function(query, page, limit) {
+exports.getMessages = async function(req, res, next) {
     // Check the existence of the query parameters, If the exists doesn't exists assign a default value
     var page = req.query.page ? req.query.page : 1
     var limit = req.query.limit ? req.query.limit : 10
@@ -24,9 +24,9 @@ exports.getMessages = async function(query, page, limit) {
     }
 }
 
-exports.createMessage = async function (message) {
+exports.createMessage = async function (req, res, next) {
     // Create mongood object
-    new newMessage = {
+    var newMessage = {
         type: req.body.type,
         message: req.body.message,
         date: req.body.date,
@@ -43,7 +43,7 @@ exports.createMessage = async function (message) {
     }
 }
 
-exports.updateMessage = async function (message) {
+exports.updateMessage = async function (req, res, next) {
     if (!req.body._id) {
         return res.status(400).json({status: 400., message: "Id must be present"})
     }
@@ -67,7 +67,7 @@ exports.updateMessage = async function (message) {
     }
 }
 
-exports.deleteMessage = async function (id) {
+exports.deleteMessage = async function (req, res, nextid) {
     // Delete message
     var id = req.params.id;
 

@@ -20,13 +20,13 @@ exports.getMessages = async function(query, page, limit) {
     } catch (e) {
         // Return error message
 
-        throw Error('Error while getting messages')
+        throw Error('Error while getting messages ' + e)
     }
 }
 
 exports.createMessage = async function (message) {
     // Create mongood object
-    new newMessage = new Message({
+    var newMessage = new Message({
         type: message.type,
         message: message.message,
         date: message.date,
@@ -36,8 +36,9 @@ exports.createMessage = async function (message) {
     try {
         // Save the message
         var savedMessage = await newMessage.save()
+        return savedMessage
     } catch (e) {
-        throw Error('Error creating new message')
+        throw Error('Error creating new message ' + e)
     }
 }
 
@@ -46,9 +47,9 @@ exports.updateMessage = async function (message) {
 
     try {
         // find old message
-        var oldMessage = await Message.findById(id);
+        var oldMessage = await Message.findById(id)
     } catch (e) {
-        throw Error('Error occured while looking for message')
+        throw Error('Error occured while looking for message' + e)
     }
 
     if (!oldMessage) {
@@ -62,8 +63,9 @@ exports.updateMessage = async function (message) {
 
     try {
         var savedMessage = await oldMessage.save()
+        return savedMessage
     } catch (e) {
-        throw Error('Error updating existing message')
+        throw Error('Error updating existing message' + e)
     }
 }
 
@@ -77,7 +79,7 @@ exports.deleteMessage = async function (id) {
         }
         return deleted
     } catch (e) {
-        throw Error("Error occured while deleted the message")
+        throw Error("Error occured while deleted the message" + e)
     }
 }
 
