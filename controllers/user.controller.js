@@ -65,3 +65,16 @@ exports.profile = async function(req, res, next) {
         next(e);
     }
 }
+
+exports.logout = async function (req, res, next) {
+    if (req.session) {
+      // delete session object
+        req.session.destroy(function (err) {
+            if (err) {
+                return next(err);
+            } else {
+                return res.status(200).json({status:200, message:'Sucessfully logged out.'});            
+            }
+        });
+    }
+}

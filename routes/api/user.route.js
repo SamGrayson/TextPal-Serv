@@ -11,6 +11,7 @@ var UserController = require('../../controllers/user.controller')
 router.post('/create', UserController.create)
 router.post('/authenticate', UserController.authenticate)
 router.get('/profile', UserController.profile)
+router.get('/logout', UserController.logout)
 
 // Export the router
 
