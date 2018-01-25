@@ -28,6 +28,7 @@ exports.createMessage = async function (req, res, next) {
     // Create mongood object
     var newMessage = {
         type: req.body.type,
+        type_code: req.body.type_code,
         message: req.body.message,
         date: req.body.date,
         active: req.body.active
@@ -53,6 +54,7 @@ exports.updateMessage = async function (req, res, next) {
     var message = {
         id,
         type: req.body.type ? req.body.type : null,
+        type_code: req.body.type_code ? req.body.type_code : null,
         message: req.body.message ? req.body.message : null,
         date: req.body.date ? req.body.date : null,
         active: req.body.active ? req.body.active : null
@@ -73,8 +75,7 @@ exports.deleteMessage = async function (req, res, nextid) {
 
     try {
         var deleted = await MessageService.deleteMessage(id)
-
-        return res.status(204).json({status:204, message: "Succesfully deleted message"})
+        return res.status(200).json({status:200, message: "Succesfully deleted message"})
     } catch (e) {
         return res.status(400).json({status: 400, message: e.message});
     }

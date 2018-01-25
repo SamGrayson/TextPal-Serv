@@ -23,15 +23,23 @@ Mongodb Database  at URL : mongodb://127.0.0.1:27017/textpal`)})
 Database at URL : mongodb://127.0.0.1:27017/textpal`)});
 var db = mongoose.connection;
 
-// use session for tracking logins
-app.use(session({
+var sess = {
   secret: 'supersecret17!',
   resave: true,
   saveUninitialized: false,
   store: new MongoStore({
     mongooseConnection: db
-  })
-}))
+  }),
+  cookie: {}
+}
+ 
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+ 
+// use session for tracking logins
+app.use(session(sess))
 
 // parse incoming requests
 app.use(bodyParser.json());

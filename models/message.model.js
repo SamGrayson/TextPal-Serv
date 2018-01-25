@@ -3,6 +3,7 @@ var mongoosePaginate = require('mongoose-paginate')
 
 var MessageSchema = new mongoose.Schema({
     type: String,
+    type_code: Number,
     message: String,
     date: Date,
     active: Boolean

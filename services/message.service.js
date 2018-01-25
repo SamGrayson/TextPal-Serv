@@ -28,6 +28,7 @@ exports.createMessage = async function (message) {
     // Create mongood object
     var newMessage = new Message({
         type: message.type,
+        type_code: message.type_code,
         message: message.message,
         date: message.date,
         active: message.active
@@ -57,6 +58,7 @@ exports.updateMessage = async function (message) {
     }
 
     oldMessage.type = message.type
+    oldMessage.type_code = message.type_code
     oldMessage.message = message.message
     oldMessage.date = message.date
     oldMessage.active = message.active
@@ -74,10 +76,10 @@ exports.deleteMessage = async function (id) {
 
     try {
         var deleted = await Message.remove({_id:id})
-        if (deleted.result.n === 0) {
-            throw Error('Message could not be dleted')
+        if (deleted.n === 0) {
+            throw Error('Message could not be deleted')
         }
-        return deleted
+        return true;
     } catch (e) {
         throw Error("Error occured while deleted the message" + e)
     }
