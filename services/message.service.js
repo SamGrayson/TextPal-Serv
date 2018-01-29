@@ -33,7 +33,7 @@ exports.createMessage = async function (message) {
     }
 }
 
-exports.getUserMessags = async function (message) {
+exports.getUserMessages = async function (query, page, limit) {
     // Pagination setup
     var options = {
         page,

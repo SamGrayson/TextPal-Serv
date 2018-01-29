@@ -34,7 +34,7 @@ exports.getUserMessages = async function(req, res, next) {
  
      // Try catch promise/handle error
      try {
-         var messages = await MessageService.getPalMessages({createdBy:number}, page, limit)
+         var messages = await MessageService.getUserMessages({createdBy:number}, page, limit)
  
          // Return list from message service with HTTP Status Code
          return res.status(200).json({status:200, data:messages, message:'Sucessfully recieved messages'});
