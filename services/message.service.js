@@ -13,7 +13,27 @@ exports.getMessage = async function(id) {
     }
 }
 
-exports.getPalMessages = async function(query, page, limit) {
+exports.createMessage = async function (message) {
+    // Create mongood object
+    var newMessage = new Message({
+        type: message.type,
+        type_code: message.type_code,
+        createdBy: message.createdBy,
+        message: message.message,
+        date: message.date,
+        active: message.active
+    })
+
+    try {
+        // Save the message
+        var savedMessage = await newMessage.save()
+        return savedMessage
+    } catch (e) {
+        throw Error('Error creating new message ' + e)
+    }
+}
+
+exports.getUserMessags = async function (message) {
     // Pagination setup
     var options = {
         page,
@@ -33,26 +53,6 @@ exports.getPalMessages = async function(query, page, limit) {
     }
 }
 
-exports.createMessage = async function (message) {
-    // Create mongood object
-    var newMessage = new Message({
-        type: message.type,
-        type_code: message.type_code,
-        pal_id: message.pal_id,
-        message: message.message,
-        date: message.date,
-        active: message.active
-    })
-
-    try {
-        // Save the message
-        var savedMessage = await newMessage.save()
-        return savedMessage
-    } catch (e) {
-        throw Error('Error creating new message ' + e)
-    }
-}
-
 exports.updateMessage = async function (message) {
     var id = message.id
 
@@ -69,8 +69,8 @@ exports.updateMessage = async function (message) {
 
     oldMessage.type = message.type
     oldMessage.type_code = message.type_code
-    oldMessage.pal_id = message.pal_id
     oldMessage.message = message.message
+    oldMessage.createdby = message.createdby
     oldMessage.date = message.date
     oldMessage.active = message.active
 

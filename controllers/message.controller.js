@@ -21,28 +21,28 @@ exports.getMessage = async function(req, res, next) {
     }
 }
 
-exports.getPalMessages = async function(req, res, next) {
-    // Check the existence of the query parameters, If the exists doesn't exists assign a default value
-    var page = req.query.page ? req.query.page : 1
-    var limit = req.query.limit ? req.query.limit : 10
-
-    if (!req.params.id) {
-        return res.status(400).json({status: 400, message: "Id must be present"})
-    }
-
-    var id = req.params.id
-
-    // Try catch promise/handle error
-    try {
-        var messages = await MessageService.getPalMessages({pal_id:id}, page, limit)
-
-        // Return list from message service with HTTP Status Code
-        return res.status(200).json({status:200, data:messages, message:'Sucessfully recieved messages'});
-    } catch (e) {
-        // Return error message
-
-        return res.status(400).json({status: 400, message: e.message});
-    }
+exports.getUserMessages = async function(req, res, next) {
+     // Check the existence of the query parameters, If the exists doesn't exists assign a default value
+     var page = req.query.page ? req.query.page : 1
+     var limit = req.query.limit ? req.query.limit : 10
+ 
+     if (!req.params.number) {
+         return res.status(400).json({status: 400, message: "Id must be present"})
+     }
+ 
+     var number = req.params.number
+ 
+     // Try catch promise/handle error
+     try {
+         var messages = await MessageService.getPalMessages({createdBy:number}, page, limit)
+ 
+         // Return list from message service with HTTP Status Code
+         return res.status(200).json({status:200, data:messages, message:'Sucessfully recieved messages'});
+     } catch (e) {
+         // Return error message
+ 
+         return res.status(400).json({status: 400, message: e.message});
+     }
 }
 
 exports.createMessage = async function (req, res, next) {
@@ -50,8 +50,8 @@ exports.createMessage = async function (req, res, next) {
     var newMessage = {
         type: req.body.type,
         type_code: req.body.type_code,
-        pal_id: req.body.pal_id,
         message: req.body.message,
+        createdBy: req.body.createdBy,
         date: req.body.date,
         active: req.body.active
     }
@@ -77,7 +77,7 @@ exports.updateMessage = async function (req, res, next) {
         id,
         type: req.body.type ? req.body.type : null,
         type_code: req.body.type_code ? req.body.type_code : null,
-        pal_id: req.body.pal_id ? req.body.pal_id : null,
+        createdBy: req.body.createdBy ? req.body.createdBy : null,
         message: req.body.message ? req.body.message : null,
         date: req.body.date ? req.body.date : null,
         active: req.body.active ? req.body.active : null

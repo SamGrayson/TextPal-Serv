@@ -2,12 +2,30 @@ var mongoose = require('mongoose')
 var mongoosePaginate = require('mongoose-paginate')
 
 var MessageSchema = new mongoose.Schema({
-    type: String,
-    type_code: Number,
-    message: String,
-    pal_id: String,
-    date: Date,
-    active: Boolean
+    type: {
+        type: String,
+        required: true
+    },
+    type_code: {
+        type: String,
+        required: true
+    },
+    message: {
+        type: String,
+        required: true
+    },
+    createdBy: {
+        type: String,
+        required: true
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    active: {
+        type: Boolean,
+        required: true
+    },
 })
 
 MessageSchema.plugin(mongoosePaginate)
