@@ -7,7 +7,13 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var bluebird = require('bluebird');
+var config = require('config');
 
+/** RUN MAIL READER */
+var mailReader = require('./controllers/mail-reader.controller');
+
+/** GET CONFIG VARIABLES */
+var dbConfig = config.get('Mongo.connection')
 
 var listener = app.listen(8888, function(){
   console.log('Listening on port ' + listener.address().port); //Listening on port 8888
@@ -16,11 +22,11 @@ var listener = app.listen(8888, function(){
 /** Mongo Connection */
 var mongoose = require('mongoose');
 mongoose.Promise = bluebird;
-mongoose.connect('mongodb://127.0.0.1:27017/jeeves')
+mongoose.connect(dbConfig)
 .then(()=> { console.log(`Succesfully Connected to the
-Mongodb Database  at URL : mongodb://127.0.0.1:27017/jeeves`)})
+Mongodb Database  at URL : ` + dbConfig)})
 .catch(()=> { console.log(`Error Connecting to the Mongodb 
-Database at URL : mongodb://127.0.0.1:27017/jeeves`)});
+Database at URL : ` + dbConfig)});
 var db = mongoose.connection;
 
 var sess = {
