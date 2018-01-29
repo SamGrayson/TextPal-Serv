@@ -4,7 +4,6 @@ var router = express.Router()
 /** Import app routes */
 var message = require('./api/message.route')
 var user = require('./api/user.route')
-var pal = require('./api/pal.route')
 
 /** Test api */
 router.get('/', function(req, res, next) {
@@ -28,7 +27,6 @@ function requiresLogin(req, res, next) {
 }
 
 /** Map other routes */
-router.use('/pal', requiresLogin, pal)
 router.use('/message', requiresLogin, message)
 router.use('/user', user)
 

@@ -16,11 +16,11 @@ var listener = app.listen(8888, function(){
 /** Mongo Connection */
 var mongoose = require('mongoose');
 mongoose.Promise = bluebird;
-mongoose.connect('mongodb://127.0.0.1:27017/textpal')
+mongoose.connect('mongodb://127.0.0.1:27017/jeeves')
 .then(()=> { console.log(`Succesfully Connected to the
-Mongodb Database  at URL : mongodb://127.0.0.1:27017/textpal`)})
+Mongodb Database  at URL : mongodb://127.0.0.1:27017/jeeves`)})
 .catch(()=> { console.log(`Error Connecting to the Mongodb 
-Database at URL : mongodb://127.0.0.1:27017/textpal`)});
+Database at URL : mongodb://127.0.0.1:27017/jeeves`)});
 var db = mongoose.connection;
 
 var sess = {
