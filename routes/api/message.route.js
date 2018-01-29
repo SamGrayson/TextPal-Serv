@@ -8,7 +8,7 @@ var MessageController = require('../../controllers/message.controller');
 
 // Map each API to the Controller FUnctions
 
-router.get('/', MessageController.getMessages)
+router.get('/:id', MessageController.getMessage)
 
 router.post('/', MessageController.createMessage)
 

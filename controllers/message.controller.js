@@ -6,14 +6,35 @@ var MessageService = require('../services/message.service')
 
 _this = this
 
-exports.getMessages = async function(req, res, next) {
+exports.getMessage = async function(req, res, next) {
+    if (!req.params.id) {
+        return res.status(400).json({status: 400, message: "Id must be present"})
+    }
+    
+    var id = req.params.id
+
+    try {
+        var message = await MessageService.getMessage(id)
+        return res.status(200).json({status:200, data:message, message:'Sucessfully recieved message'});
+    } catch (e) {
+        return res.status(400).json({status: 400, message: e.message});
+    }
+}
+
+exports.getPalMessages = async function(req, res, next) {
     // Check the existence of the query parameters, If the exists doesn't exists assign a default value
     var page = req.query.page ? req.query.page : 1
     var limit = req.query.limit ? req.query.limit : 10
 
+    if (!req.params.id) {
+        return res.status(400).json({status: 400, message: "Id must be present"})
+    }
+
+    var id = req.params.id
+
     // Try catch promise/handle error
     try {
-        var messages = await MessageService.getMessages({}, page, limit)
+        var messages = await MessageService.getPalMessages({pal_id:id}, page, limit)
 
         // Return list from message service with HTTP Status Code
         return res.status(200).json({status:200, data:messages, message:'Sucessfully recieved messages'});
@@ -29,6 +50,7 @@ exports.createMessage = async function (req, res, next) {
     var newMessage = {
         type: req.body.type,
         type_code: req.body.type_code,
+        pal_id: req.body.pal_id,
         message: req.body.message,
         date: req.body.date,
         active: req.body.active
@@ -38,7 +60,7 @@ exports.createMessage = async function (req, res, next) {
         // Save the message
         var savedMessage = await MessageService.createMessage(newMessage)
 
-        return res.status(201).json({status:201, data:savedMessage, message:'Sucessfully saved message'});
+        return res.status(200).json({status:200, data:savedMessage, message:'Sucessfully saved message'});
     } catch (e) {
         return res.status(400).json({status: 400, message: e.message});
     }
@@ -46,7 +68,7 @@ exports.createMessage = async function (req, res, next) {
 
 exports.updateMessage = async function (req, res, next) {
     if (!req.body._id) {
-        return res.status(400).json({status: 400., message: "Id must be present"})
+        return res.status(400).json({status: 400, message: "Id must be present"})
     }
 
     var id = req.body._id;
@@ -55,6 +77,7 @@ exports.updateMessage = async function (req, res, next) {
         id,
         type: req.body.type ? req.body.type : null,
         type_code: req.body.type_code ? req.body.type_code : null,
+        pal_id: req.body.pal_id ? req.body.pal_id : null,
         message: req.body.message ? req.body.message : null,
         date: req.body.date ? req.body.date : null,
         active: req.body.active ? req.body.active : null
@@ -65,11 +88,15 @@ exports.updateMessage = async function (req, res, next) {
     
         return res.status(200).json({status:200, data:updatedMessage, message:'Sucessfully updated message'});
     } catch (e) {
-        throw Error('Error occured while looking for message')
+        return res.status(400).json({status: 400, message: e.message});
     }
 }
 
 exports.deleteMessage = async function (req, res, nextid) {
+    if (!req.params.id) {
+        return res.status(400).json({status: 400, message: "Id must be present"})
+    }
+
     // Delete message
     var id = req.params.id;
 

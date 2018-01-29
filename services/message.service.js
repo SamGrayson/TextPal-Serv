@@ -4,7 +4,16 @@ var Message = require('../models/message.model')
 /** _this variable for context of module */
 _this = this
 
-exports.getMessages = async function(query, page, limit) {
+exports.getMessage = async function(id) {
+    try {
+        var message = await Message.findById(id)
+        return message
+    } catch (e) {
+        throw Error('Error finding message')
+    }
+}
+
+exports.getPalMessages = async function(query, page, limit) {
     // Pagination setup
     var options = {
         page,
@@ -29,6 +38,7 @@ exports.createMessage = async function (message) {
     var newMessage = new Message({
         type: message.type,
         type_code: message.type_code,
+        pal_id: message.pal_id,
         message: message.message,
         date: message.date,
         active: message.active
@@ -59,6 +69,7 @@ exports.updateMessage = async function (message) {
 
     oldMessage.type = message.type
     oldMessage.type_code = message.type_code
+    oldMessage.pal_id = message.pal_id
     oldMessage.message = message.message
     oldMessage.date = message.date
     oldMessage.active = message.active
