@@ -5,6 +5,7 @@ var config = require('config');
 var fs = require('fs');
 var message = require('../models/message.model');
 var moment = require('moment');
+var htmlToText = require('html-to-text');
 
 /** Message Utils */
 var MessageUtils = require('../models/message-util');
@@ -46,6 +47,8 @@ var mailHandler = function(mail) {
     active: true,
   };
 
+  console.log(mail);
+
   // Parse 'from' for createdby
   if (mail.from) {
     try {
@@ -56,8 +59,10 @@ var mailHandler = function(mail) {
   }
 
   // Check for text
-  if (mail.text) {
-    newMessage.message = mail.text;
+  if (mail.html) {
+    newMessage.message = htmlToText.fromString(mail.html, {
+      wordwrap: 130
+    });
   }
   // Check for attacthments (Verison sends text and .txt) THANKS VERIZON!
   if(mail.attachments) {

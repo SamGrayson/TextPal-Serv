@@ -19,6 +19,7 @@
     "ejs": "~2.5.7",
     "express": "~4.15.5",
     "express-session": "^1.15.2",
+    "html-to-text": "^3.3.0",
     "jsonwebtoken": "^7.1.9",
     "lodash": "^4.17.4",
     "mail-notifier": "^0.4.1",
