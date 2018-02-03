@@ -4,7 +4,19 @@ var notifier = require('mail-notifier');
 var config = require('config');
 var fs = require('fs');
 var message = require('../models/message.model');
-var messageTypes = require('../models/message-types');
+var moment = require('moment');
+
+/** Message Utils */
+var MessageUtils = require('../models/message-util');
+var messageTypes = MessageUtils.messageTypes;
+// REQUESTS
+var getRequests = MessageUtils.getRequests;
+var postRequests = MessageUtils.postRequests;
+var updateRequests = MessageUtils.updateRequests;
+var deleteRequests = MessageUtils.deleteRequests;
+// NAMING
+var calledSynonyms = MessageUtils.calledSynonyms;
+
 var _ = require('lodash');
 
 /** Parser */
@@ -28,16 +40,19 @@ var mailHandler = function(mail) {
     type: null,
     type_code: null,
     message: null,
+    name: null,
     createdBy: null,
-    date: mail.date ? mail.date : null,
+    date: mail.date ? moment(mail.date).format("ddd, DD MMM YYYY HH:mm:ss ZZ") : moment().format("ddd, DD MMM YYYY HH:mm:ss ZZ"),
     active: true,
   };
 
-  console.log(mail);
-
   // Parse 'from' for createdby
   if (mail.from) {
-    newMessage.createdBy = parseNumber(mail.from[0].address);
+    try {
+      newMessage.createdBy = parseNumber(mail.from[0].address);
+    } catch (e) {
+      throw Error('Unable to read number from message');
+    }
   }
 
   // Check for text
@@ -61,7 +76,8 @@ var mailHandler = function(mail) {
       });
   }
 
-  console.log("I'm a new message!: ", newMessage)
+  // Parse message to decide how to handle it 
+  messageHandler(newMessage);
 };
 
 var parseNumber = function(email) {
@@ -70,12 +86,72 @@ var parseNumber = function(email) {
   return leftSide.match(regx) ? leftSide.match(regx).join('') : null;
 };
 
-// var determineType = function(message) {
-//   var splitMessage = message.split(' ');
-//   for (var i = 0; i<splitMessage.length; i++) {
-//     if (messageTypes.map.
-//   }
-// };
+var messageHandler = function(newMessage) {
+
+  if (newMessage.message) {
+    var split = _.lowerCase(newMessage.message).split(' ');
+    var pristineSplit = newMessage.message.split(' ');
+  } else {
+    throw Error("no message string")
+  }
+  var requestFound = false;
+  var messageTypeFound = false;
+  var namingFound = false;
+
+  var request = "post";
+  var requestIndex = null;
+
+  var messageObj = null;
+
+
+  /** Determine type of request first */
+  /** Only look at max first 20 words for speed. (request and name should be found by then otherwise its a bogus message) */
+  var loopLength = split.length<20 ? split.length : 20;
+  for(var i=0;i<loopLength;i++) {
+    /** post requets */
+    if (_.indexOf(postRequests, split[i]) >= 0 && !requestFound) {
+      request = "post";
+      requestFound = true;
+    }
+    /** get requets */
+    if (_.indexOf(getRequests, split[i]) >= 0 && !requestFound) {
+      request = "get";
+      requestFound = true;
+    }
+    /** delete requests */
+    if (_.indexOf(deleteRequests, split[i]) >= 0 && !requestFound) {
+      request = "delete";
+      requestFound = true;
+    }
+    /** Add to list?? Remove from list?? (:TODO) */
+
+    /** Try and get the type (should be next word otherwise not valid default to note) */
+    // POST
+    
+    if (requestFound && !messageTypeFound && request==="post") {
+      // Should be next word
+      messageObj = messageTypes[split[i+1]] ? messageTypes[split[i+1]] : messageTypes['note'];
+      // set message info
+      newMessage.type = messageObj.name;
+      newMessage.type_code = messageObj.code;
+      messageTypeFound = true;
+    }
+    // GET DELETE
+    if (requestFound && !messageTypeFound && (request==="get" || request==="delete")) {
+      var t = split.filter(function(s){
+        return s==='list' || s==='reminder' || s==='note';
+      })
+      if (t.length === 0) {
+        throw Error('Unable to find message type of request');
+      } else {
+        // Take first instance of found message type in string
+        messageObj = messageTypes[t[0]];
+      }
+    }
+     /** Need to try and find the name next */
+  }
+  console.log("New message with type:", newMessage);
+}
 
 const n = notifier(imap);
 n.on('end', () => n.start()) // session closed

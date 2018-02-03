@@ -50,6 +50,7 @@ exports.createMessage = async function (req, res, next) {
     var newMessage = {
         type: req.body.type,
         type_code: req.body.type_code,
+        name: req.body.name,
         message: req.body.message,
         createdBy: req.body.createdBy,
         date: req.body.date,
@@ -77,6 +78,7 @@ exports.updateMessage = async function (req, res, next) {
         id,
         type: req.body.type ? req.body.type : null,
         type_code: req.body.type_code ? req.body.type_code : null,
+        name: req.body.name ? req.body.name : null,
         createdBy: req.body.createdBy ? req.body.createdBy : null,
         message: req.body.message ? req.body.message : null,
         date: req.body.date ? req.body.date : null,

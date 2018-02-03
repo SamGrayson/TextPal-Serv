@@ -18,6 +18,7 @@ exports.createMessage = async function (message) {
     var newMessage = new Message({
         type: message.type,
         type_code: message.type_code,
+        name: message.name,
         createdBy: message.createdBy,
         message: message.message,
         date: message.date,
@@ -71,6 +72,7 @@ exports.updateMessage = async function (message) {
     oldMessage.type_code = message.type_code
     oldMessage.message = message.message
     oldMessage.createdby = message.createdby
+    oldMessage.name = message.name
     oldMessage.date = message.date
     oldMessage.active = message.active
 

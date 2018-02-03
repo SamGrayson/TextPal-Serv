@@ -7,6 +7,10 @@ var MessageSchema = new mongoose.Schema({
         required: true
     },
     type_code: {
+        type: Number,
+        required: true
+    },
+    name: {
         type: String,
         required: true
     },
