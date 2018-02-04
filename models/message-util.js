@@ -21,7 +21,7 @@ const postRequests = ['post', 'new', 'create', ' make', 'compose'];
 const deleteRequests = ['delete', 'remove', 'destroy', 'omit', 'eliminate'];
 const updateRequests = ['revise', 'update', 'edit']
 
-const calledSynonyms = ['named', 'called', 'titled', 'entitled', 'labeled as', 'tagged as', 'specified as']
+const calledSynonyms = ['named', 'called', 'titled', 'entitled', 'labeled', 'tagged', 'specified']
 
 module.exports = {
     messageTypes: messageTypes,
